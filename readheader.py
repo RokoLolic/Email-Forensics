@@ -13,7 +13,7 @@ def extractIPs(fileContent):
     ipv6s = re.findall(ipv6_extract_pattern, fileContent)
     return ipv4s, ipv6s
 
-filename = "[Merlin] Jezici i prevoditelji (220_250) Provjera parsera.eml"
+filename = "hello from outlook.eml"
 
 # If the e-mail headers are in a file, uncomment these two lines:
 with open(filename, 'rb') as fp:
@@ -31,6 +31,7 @@ print('Sender name: {}'.format(headers['from'].addresses[0].display_name))
 headers_string = str(headers)
 #print(headers_string)
 IPV4s, IPV6s= extractIPs(headers_string) # extract IPv4 and IPv6 adresses
+
 for i in range(len(IPV6s)): 
     ip_address = IPV6s[i][0]
     print(ip_address)
