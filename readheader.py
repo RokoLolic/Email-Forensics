@@ -4,6 +4,9 @@ from email.policy import default
 import re
 import requests
 import json
+import os, sys, optparse
+from exif import Image
+import webbrowser
 
 def extractIPs(fileContent):
     ipv4_extract_pattern = "(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"
@@ -13,7 +16,7 @@ def extractIPs(fileContent):
     ipv6s = re.findall(ipv6_extract_pattern, fileContent)
     return ipv4s, ipv6s
 
-filename = "hello from outlook.eml"
+filename = "Test.eml"
 
 # If the e-mail headers are in a file, uncomment these two lines:
 with open(filename, 'rb') as fp:
@@ -32,6 +35,8 @@ headers_string = str(headers)
 #print(headers_string)
 IPV4s, IPV6s= extractIPs(headers_string) # extract IPv4 and IPv6 adresses
 
+
+
 for i in range(len(IPV6s)): 
     ip_address = IPV6s[i][0]
     print(ip_address)
@@ -40,7 +45,15 @@ for i in range(len(IPV6s)):
     result = response.content.decode()
     result = result.split("(")[1].strip(")")
     result  = json.loads(result)
-    print(result)
+    result_latitude = result['latitude']
+    result_longitude = result['longitude']
+    print(result_latitude, result_longitude)
+    #url="http://www.google.com/maps/place/@" + str(result_latitude) + "," + str(result_longitude)
+    #url="http://www.google.com/maps//@" + str(result_latitude) + "," + str(result_longitude)
+    url="http://www.google.com/maps/place/" + str(result_latitude) + "," + str(result_longitude)
+
+    webbrowser.open_new_tab(url)
+
 
 for i in range(len(IPV4s)):
     ip_address = IPV4s[i]
@@ -50,4 +63,10 @@ for i in range(len(IPV4s)):
     result = response.content.decode()
     result = result.split("(")[1].strip(")")
     result  = json.loads(result)
-    print(result)
+    result_latitude = result['latitude']
+    result_longitude = result['longitude']
+    print(result_latitude, result_longitude)
+    #url="http://www.google.com/maps/place//@" + str(result_latitude) + "," + str(result_longitude)
+    #url="http://www.google.com/maps//@" + str(result_latitude) + "," + str(result_longitude)
+    url="http://www.google.com/maps/place/" + str(result_latitude) + "," + str(result_longitude)
+    webbrowser.open_new_tab(url)
